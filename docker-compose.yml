@@ -20,8 +20,8 @@ services:
     - type: bind
       source: ./api
       target: /api
-    # ports:
-      # - 5000:5000
+    ports:
+      - 5000:5000
     
     env_file:
       - ./.env.dev

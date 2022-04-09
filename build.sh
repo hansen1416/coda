@@ -1,1 +1,1 @@
-docker-compse build
+docker-compose build

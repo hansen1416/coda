@@ -22,14 +22,17 @@ services:
       target: /api
     ports:
       - 5000:5000
-    
     env_file:
       - ./.env.dev
     command: python manage.py run -h 0.0.0.0
-  # redis:
-  #   image: redis
-# volumes:
-#   logvolume01: {}
+  db:
+    image: postgres:13-alpine
+    # volumes:
+    #   - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=hlz
+      - POSTGRES_PASSWORD=12345678
+      - POSTGRES_DB=coda
 
 
 # networks:

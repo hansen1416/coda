@@ -1,1 +1,1 @@
-docker-compse down
+docker-compose down

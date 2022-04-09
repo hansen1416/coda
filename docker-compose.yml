@@ -24,8 +24,8 @@ services:
       - 5000:5000
     env_file:
       - ./.env.dev
-    command: python manage.py run -h 0.0.0.0
-    # command: gunicorn --bind 0.0.0.0:5000 manage:app
+    # command: python manage.py run -h 0.0.0.0
+    command: gunicorn --bind 0.0.0.0:5000 manage:app
   db:
     image: postgres:13-alpine
     # volumes:

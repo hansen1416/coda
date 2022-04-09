@@ -1,0 +1,38 @@
+version: "3.4"  # optional since v1.27.0
+services:
+  web:
+    image: node:14-alpine
+    working_dir: /web
+    volumes:
+      - type: bind
+        source: ./web
+        target: /web
+    ports:
+      - "3000:3000"
+    # command: tail -f /dev/null
+    command: npm run dev
+  api:
+    build: ./api
+    # networks: 
+    #   - host
+    working_dir: /api
+    volumes:
+    - type: bind
+      source: ./api
+      target: /api
+    # ports:
+      # - 5000:5000
+    
+    env_file:
+      - ./.env.dev
+    command: python manage.py run -h 0.0.0.0
+  # redis:
+  #   image: redis
+# volumes:
+#   logvolume01: {}
+
+
+# networks:
+#   host:
+#     name: host
+#     external: true

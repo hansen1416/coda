@@ -14,3 +14,5 @@ RUN pip install -r requirements.txt
 
 # copy project
 COPY . /api
+
+ENTRYPOINT ["/api/entrypoint.sh"]

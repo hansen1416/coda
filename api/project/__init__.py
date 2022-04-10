@@ -21,8 +21,8 @@ app.config.from_object("project.config.Config")
 #         self.email = email
 
 def get_db_connection():
-    conn = psycopg2.connect(host='localhost',
-                            database='flask_db',
+    conn = psycopg2.connect(host='db',
+                            database='coda',
                             user=os.environ['DB_USERNAME'],
                             password=os.environ['DB_PASSWORD'])
     return conn

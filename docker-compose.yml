@@ -11,21 +11,33 @@ services:
       - "3000:3000"
     # command: tail -f /dev/null
     command: npm run dev
+  nginx:
+    image: nginx:1.20-alpine
+    # build: ./services/nginx
+    # volumes:
+    #   - static_volume:/home/app/web/project/static
+    ports:
+      - 1337:80
+    depends_on:
+      - api
   api:
-    build: ./api
-    # networks: 
-    #   - host
+    # build: ./api
+    image: hansen1416/coda_api
     working_dir: /api
     volumes:
     - type: bind
       source: ./api
       target: /api
-    ports:
-      - 5000:5000
+    # ports:
+    #   - 5000:5000
+    expose:
+      - 5000
     env_file:
       - ./.env.dev
     # command: python manage.py run -h 0.0.0.0
     command: gunicorn --bind 0.0.0.0:5000 manage:app
+    depends_on:
+      - db
   db:
     image: postgres:13-alpine
     # volumes:

@@ -1,8 +1,9 @@
 import os
 
-from flask import Flask, jsonify
 # from flask_sqlalchemy import SQLAlchemy
+from flask import {Flask, jsonify, request}
 import psycopg2
+from werkzeug.security import safe_str_cmp
 
 app = Flask(__name__)
 # read config from config.py
@@ -31,6 +32,13 @@ def get_db_connection():
 @app.route("/")
 def hello_world():
 
-    conn = get_db_connection()
-
     return jsonify(hello="world")
+
+
+@app.route("/register")
+def register():
+
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    return jsonify(username=username, password=password)

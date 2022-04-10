@@ -1,7 +1,7 @@
 import os
 
 # from flask_sqlalchemy import SQLAlchemy
-from flask import {Flask, jsonify, request}
+from flask import Flask, jsonify, request
 import psycopg2
 from werkzeug.security import safe_str_cmp
 

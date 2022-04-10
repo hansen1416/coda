@@ -15,8 +15,6 @@ export default {
 			data.append("username", this.username);
 			data.append("password", this.password);
 
-			// console.log();
-
 			axios
 				.post(import.meta.env.VITE_API_URL + "/register", data)
 				.then((response) => {

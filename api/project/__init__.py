@@ -3,7 +3,7 @@ import os
 # from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, jsonify, request
 import psycopg2
-from werkzeug.security import safe_str_cmp
+# from werkzeug.security import safe_str_cmp
 
 app = Flask(__name__)
 # read config from config.py

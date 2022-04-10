@@ -4,7 +4,6 @@ import axios from "axios";
 export default {
 	data() {
 		return {
-			username: "",
 			emial: "",
 			password: "",
 		};
@@ -13,15 +12,13 @@ export default {
 		register() {
 			const data = new FormData();
 
-			data.append("username", this.username);
 			data.append("email", this.email);
 			data.append("password", this.password);
 
 			axios
-				.post(import.meta.env.VITE_API_URL + "auth/register", data)
+				.post(import.meta.env.VITE_API_URL + "auth/login", data)
 				.then((response) => {
 					localStorage.setItem("jwt", response.data.access_token);
-
 					window.location = "#/";
 				});
 		},
@@ -30,10 +27,7 @@ export default {
 </script>
 <template>
 	<div>
-		<h3>register</h3>
-		<div>
-			<label>Username: <input v-model="username" type="text" /></label>
-		</div>
+		<h3>login</h3>
 		<div>
 			<label>Email: <input v-model="email" type="text" /></label>
 		</div>

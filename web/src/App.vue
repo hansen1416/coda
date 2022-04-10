@@ -2,12 +2,14 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 import Home from "./Home.vue";
+import Login from "./Login.vue";
 import Register from "./Register.vue";
 import NotFound from "./NotFound.vue";
 
 const routes = {
 	"/": Home,
 	"/register": Register,
+	"/login": Login,
 };
 
 export default {
@@ -33,7 +35,7 @@ export default {
 	<div id="app">
 		<div class="nev">
 			<a href="#/">Home</a> | <a href="#/register">Register</a> |
-			<a href="#/non-existent-path">Broken Link</a>
+			<a href="#/login">Login</a>
 		</div>
 		<component :is="currentView" />
 	</div>

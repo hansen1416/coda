@@ -27,7 +27,7 @@ class User(db.Model):
 
         self.username = username
         self.email = email
-        self.password = password
+        self.set_password(password)
 
     # strings based on the state of the object, if __str__ is missing
     def __repr__(self):

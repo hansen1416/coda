@@ -1,13 +1,19 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from flask_jwt_extended import JWTManager
+
+jwt = JWTManager()
 
 # Define the WSGI application object
 app = Flask(__name__)
-CORS(app)
+
 
 # Configurations
 app.config.from_object('config')
+
+CORS(app)
+jwt.init_app(app)
 
 # Define the database object which is imported
 # by modules and controllers

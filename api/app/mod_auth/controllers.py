@@ -8,7 +8,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app import db
 
 # Import module forms
-from app.mod_auth.forms import LoginForm
+from app.mod_auth.forms import RegisterForm
 
 # Import module models (i.e. User)
 from app.mod_auth.models import User
@@ -20,20 +20,20 @@ mod_auth = Blueprint('auth', __name__, url_prefix='/auth')
 
 
 @mod_auth.route('/register', methods=['POST'])
-def signin():
+def register():
 
     # If sign in form is submitted
-    form = LoginForm(request.form)
+    form = RegisterForm(request.form)
 
     # Verify the sign in form
     if form.validate_on_submit():
 
-        user = User.query.filter_by(email=form.email.data).first()
+        user = User(username=form.username.data,
+                    email=form.email.data,
+                    password=form.password.data)
+        db.session.add(user)
+        db.session.commit()
 
-        if user and check_password_hash(user.password, form.password.data):
-
-            session['user_id'] = user.id
-
-            return jsonify(username=user.username)
+        return jsonify(id=user.id)
 
     return jsonify(error="failed")

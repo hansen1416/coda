@@ -5,6 +5,7 @@ export default {
 	data() {
 		return {
 			username: "",
+			emial: "",
 			password: "",
 		};
 	},
@@ -13,10 +14,11 @@ export default {
 			const data = new FormData();
 
 			data.append("username", this.username);
+			data.append("email", this.email);
 			data.append("password", this.password);
 
 			axios
-				.post(import.meta.env.VITE_API_URL + "/register", data)
+				.post(import.meta.env.VITE_API_URL + "/auth/register", data)
 				.then((response) => {
 					console.log(response);
 				});
@@ -29,6 +31,9 @@ export default {
 		<h3>register</h3>
 		<div>
 			<label>Username: <input v-model="username" type="text" /></label>
+		</div>
+		<div>
+			<label>Email: <input v-model="email" type="text" /></label>
 		</div>
 		<div>
 			<label

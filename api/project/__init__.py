@@ -35,7 +35,7 @@ def hello_world():
     return jsonify(hello="world")
 
 
-@app.route("/register")
+@app.route("/register", methods=['GET', 'POST'])
 def register():
 
     username = request.form.get('username')

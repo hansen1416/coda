@@ -5,13 +5,12 @@ from flask_wtf import Form  # , RecaptchaField
 from wtforms import BooleanField, PasswordField, StringField, SubmitField
 
 # Import Form validators
-from wtforms.validators import Required, Email
+from wtforms.validators import DataRequired
 
 
 # Define the login form (WTForms)
 
 class LoginForm(Form):
-    email = StringField('Email Address', [Email(),
-                                          Required(message='Forgot your email address?')])
+    email = StringField('Email Address', [DataRequired(message='Forgot your email address?')])
     password = PasswordField('Password', [
-        Required(message='Must provide a password. ;-)')])
+        DataRequired(message='Must provide a password. ;-)')])

@@ -34,6 +34,11 @@ services:
       - POSTGRES_USER=hlz
       - POSTGRES_PASSWORD=12345678
       - POSTGRES_DB=coda
+    working_dir: /mnt
+    volumes:
+    - type: bind
+      source: ./postgressql
+      target: /mnt
 
 
 # networks:

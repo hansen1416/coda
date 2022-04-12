@@ -10,10 +10,10 @@ from werkzeug.security import check_password_hash
 from app import db
 
 # Import module forms
-from app.mod_auth.forms import RegisterForm
+from app.auth.forms import RegisterForm
 
 # Import module models (i.e. User)
-from app.mod_auth.models import User
+from app.auth.models import User
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 mod_auth = Blueprint('auth', __name__, url_prefix='/auth')
@@ -24,8 +24,20 @@ mod_auth = Blueprint('auth', __name__, url_prefix='/auth')
 @mod_auth.route('/register', methods=['POST'])
 def register():
 
+    email = User.query.filter_by(
+        email=request.form.get('email')).first()
+
+    if email:
+        return jsonify(error="email taken")
+
+    username = User.query.filter_by(
+        username=request.form.get('username')).first()
+
+    if username:
+        return jsonify(error="username taken")
+
     # If sign in form is submitted
-    form = RegisterForm(request.form)
+    form = RegisterForm(request.form, meta={'csrf': False})
 
     # Verify the sign in form
     if form.validate_on_submit():
@@ -42,7 +54,11 @@ def register():
 
         return jsonify(access_token=access_token)
 
-    return jsonify(error="failed")
+    for fieldName, errorMessages in form.errors.items():
+        for err in errorMessages:
+            print(err)
+
+    return jsonify(error=" ".join(form.username.errors) + " ".join(form.email.errors))
 
 
 @mod_auth.route('/login', methods=['POST'])

@@ -33,10 +33,20 @@ export default {
 
 <template>
 	<div id="app">
-		<div class="nev">
-			<a href="#/">Home</a> | <a href="#/register">Register</a> |
-			<a href="#/login">Login</a>
-		</div>
+		<va-navbar color="dark" class="nav">
+			<template #center>
+				<va-navbar-item>
+					<a href="#/">Home</a>
+				</va-navbar-item>
+				<va-navbar-item>
+					<a href="#/register">Register</a>
+				</va-navbar-item>
+				<va-navbar-item>
+					<a href="#/login">Login</a>
+				</va-navbar-item>
+			</template>
+		</va-navbar>
+
 		<component :is="currentView" />
 	</div>
 </template>
@@ -47,7 +57,14 @@ export default {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-align: center;
-	color: #2c3e50;
-	margin-top: 60px;
+}
+
+.nav a {
+	color: #fff;
+}
+
+.form {
+	width: 600px;
+	margin: 30px auto;
 }
 </style>

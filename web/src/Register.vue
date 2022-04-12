@@ -30,18 +30,11 @@ export default {
 </script>
 <template>
 	<div>
-		<h3>register</h3>
-		<div>
-			<label>Username: <input v-model="username" type="text" /></label>
-		</div>
-		<div>
-			<label>Email: <input v-model="email" type="text" /></label>
-		</div>
-		<div>
-			<label
-				>Password: <input v-model="password" type="password"
-			/></label>
-		</div>
-		<button @click="register">Submit</button>
+		<va-form class="form">
+			<va-input label="Username:" v-model="username" />
+			<va-input label="Email:" v-model="email" />
+			<va-input label="Password:" type="password" v-model="password" />
+		</va-form>
+		<va-button type="submit" @click="register">Register</va-button>
 	</div>
 </template>

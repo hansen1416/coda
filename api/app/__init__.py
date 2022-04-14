@@ -31,10 +31,11 @@ def not_found(error):
 
 def register_module():
     from app.auth.controllers import mod_auth as auth_module
+    from app.board.controllers import mod_board as board_module
 
     # Register blueprint(s)
     app.register_blueprint(auth_module)
-    # app.register_blueprint(xyz_module)
+    app.register_blueprint(board_module)
     # ..
 
     # Build the database:

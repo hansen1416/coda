@@ -4,12 +4,14 @@
 import Home from "./Home.vue";
 import Login from "./Login.vue";
 import Register from "./Register.vue";
+import CreateBoard from "./CreateBoard.vue";
 import NotFound from "./NotFound.vue";
 
 const routes = {
 	"/": Home,
 	"/register": Register,
 	"/login": Login,
+	"/create/board": CreateBoard,
 };
 
 export default {
@@ -43,6 +45,9 @@ export default {
 				</va-navbar-item>
 				<va-navbar-item>
 					<a href="#/login">Login</a>
+				</va-navbar-item>
+				<va-navbar-item>
+					<a href="#/create/board">Create Board</a>
 				</va-navbar-item>
 			</template>
 		</va-navbar>

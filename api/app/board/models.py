@@ -33,8 +33,14 @@ class Board(db.Model):
 
 
 class BoardPermission(db.Model):
+    """
+        Superuser: 1 << 1
+        Board Administrators: 1 << 2
+        Board Moderators: 1 << 3
 
-    __tablename__ = 'board'
+    """
+
+    __tablename__ = 'board_permission'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 

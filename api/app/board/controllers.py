@@ -1,17 +1,13 @@
 import json
 import sys
-# Import flask dependencies
+
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-# Import the database object from the main app module
 from app import db
-
-# Import module forms
 from app.board.forms import BoardForm
-
-# Import module models (i.e. User)
-from app.board.models import Board
+from app.board.models import Board, BoardPermission
+from app.constants import *
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 mod_board = Blueprint('board', __name__, url_prefix='/board')
@@ -36,6 +32,12 @@ def create():
         # db.session.add(transaction)
         board = Board(name=form.board_name.data)
         db.session.add(board)
+
+        db.session.flush()
+
+        board_permission = BoardPermission(
+            board_id=board.id, user_id=current_user['id'], permission=1 << PERMISSION_ADMIN + 1 << PERMISSION_OWNER)
+        db.session.add(board_permission)
 
         db.session.commit()
 

@@ -17,6 +17,9 @@ export default {
 				"get",
 				"auth/me",
 				(data) => {
+					localStorage.setItem("jwt", data.access_token);
+					localStorage.setItem("jwt_refresh", data.refresh_token);
+
 					this.user = JSON.parse(data.current_user);
 					this.username = this.user.username;
 				},

@@ -1,5 +1,9 @@
 import axios from "axios";
 
+export const permission_owner = 1;
+export const permission_admin = 2;
+export const permission_mod = 3;
+
 export function http_request(method, path, callback, component, data, headers) {
 	const param = {
 		method: method,

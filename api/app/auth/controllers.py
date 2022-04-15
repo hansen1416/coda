@@ -1,7 +1,8 @@
 import json
 # Import flask dependencies
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, create_refresh_token, \
+    jwt_required, get_jwt_identity
 
 # Import password / encryption helper tools
 from werkzeug.security import check_password_hash
@@ -49,10 +50,13 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        access_token = create_access_token(
-            identity=json.dumps({"id": user.id, "username": user.username, "email": user.email}))
+        user_json = json.dumps(
+            {"id": user.id, "username": user.username, "email": user.email})
 
-        return jsonify(access_token=access_token)
+        access_token = create_access_token(identity=user_json)
+        refresh_token = create_refresh_token(identity=user_json)
+
+        return jsonify(access_token=access_token, refresh_token=refresh_token)
 
     for fieldName, errorMessages in form.errors.items():
         for err in errorMessages:
@@ -67,17 +71,24 @@ def login():
     user = User.query.filter_by(email=request.form.get('email')).first()
 
     if user and check_password_hash(user.password, request.form.get('password')):
-        access_token = create_access_token(
-            identity=json.dumps({"id": user.id, "username": user.username, "email": user.email}))
-        return jsonify(access_token=access_token)
+        user_json = json.dumps(
+            {"id": user.id, "username": user.username, "email": user.email})
+
+        access_token = create_access_token(identity=user_json)
+        refresh_token = create_refresh_token(identity=user_json)
+
+        return jsonify(access_token=access_token, refresh_token=refresh_token)
 
     return jsonify(error="failed")
 
 
 @mod_auth.route('/me', methods=['GET'])
-@jwt_required()
+@jwt_required(refresh=True)
 def get_me():
 
     current_user = get_jwt_identity()
 
-    return jsonify(current_user=current_user)
+    access_token = create_access_token(identity=current_user)
+    refresh_token = create_refresh_token(identity=current_user)
+
+    return jsonify(current_user=current_user, access_token=access_token, refresh_token=refresh_token)

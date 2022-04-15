@@ -1,5 +1,4 @@
 <script>
-import axios from "axios";
 import { http_request } from "./helpers.js";
 
 export default {

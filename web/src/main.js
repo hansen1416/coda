@@ -4,17 +4,20 @@ import App from "./App.vue";
 import { VuesticPlugin } from "vuestic-ui"; //(✓)
 import "vuestic-ui/dist/vuestic-ui.css"; //(✓)
 
+import NotFound from "./NotFound.vue";
 import Home from "./Home.vue";
 import Login from "./Login.vue";
 import Register from "./Register.vue";
 import CreateBoard from "./CreateBoard.vue";
-import NotFound from "./NotFound.vue";
+import Board from "./Board.vue";
 
 const routes = [
 	{ path: "/", component: Home },
 	{ path: "/register", component: Register },
 	{ path: "/login", component: Login },
 	{ path: "/create/board", component: CreateBoard },
+	{ path: "/board/:id", component: Board },
+	{ path: "/:pathMatch(.*)", component: NotFound },
 ];
 
 // 3. Create the router instance and pass the `routes` option

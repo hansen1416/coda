@@ -1,5 +1,4 @@
 <script>
-import axios from "axios";
 import { http_request } from "./helpers.js";
 
 export default {
@@ -11,9 +10,9 @@ export default {
 		};
 	},
 	created() {
-		const jwt = localStorage.getItem("jwt");
+		const jwt_refresh = localStorage.getItem("jwt_refresh");
 
-		if (jwt) {
+		if (jwt_refresh) {
 			http_request(
 				"get",
 				"auth/me",
@@ -21,7 +20,9 @@ export default {
 					this.user = JSON.parse(data.current_user);
 					this.username = this.user.username;
 				},
-				this
+				this,
+				undefined,
+				{ Authorization: "Bearer " + jwt_refresh }
 			);
 		}
 	},

@@ -25,9 +25,6 @@ export default {
 				<va-navbar-item>
 					<router-link to="/create/board">Create Board</router-link>
 				</va-navbar-item>
-				<va-navbar-item>
-					<router-link to="/create/board">Create Board</router-link>
-				</va-navbar-item>
 			</template>
 		</va-navbar>
 

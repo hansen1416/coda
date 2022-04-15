@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export function http_request(method, path, callback, component, data) {
+export function http_request(method, path, callback, component, data, headers) {
 	const param = {
 		method: method,
 		url: import.meta.env.VITE_API_URL + path,
@@ -14,6 +14,10 @@ export function http_request(method, path, callback, component, data) {
 
 	if (jwt) {
 		param["headers"] = { Authorization: "Bearer " + jwt };
+	}
+
+	if (headers) {
+		param["headers"] = headers;
 	}
 
 	axios.request(param).then((response) => {

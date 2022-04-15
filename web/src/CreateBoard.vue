@@ -18,7 +18,7 @@ export default {
 				"post",
 				"board/create",
 				(data) => {
-					console.log(data);
+					this.$router.push({ path: "/board/" + data.board_id });
 				},
 				this,
 				data

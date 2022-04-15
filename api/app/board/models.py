@@ -21,7 +21,7 @@ class Board(db.Model):
 
     # strings based on the state of the object, if __str__ is missing
     def __repr__(self):
-        return '<User %r>' % (self.name)
+        return '<Board %r>' % (self.name)
 
     @classmethod
     def get(cls, board_id):
@@ -30,3 +30,21 @@ class Board(db.Model):
             return Board.query.filter_by(id=board_id).one()
         except NoResultFound:
             return None
+
+
+class BoardPermission(db.Model):
+
+    __tablename__ = 'board'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    board_id = db.Column(db.Integer, nullable=False)
+
+    user_id = db.Column(db.Integer, nullable=False)
+
+    permission = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, board_id, user_id, permission):
+        self.board_id = board_id
+        self.user_id = user_id
+        self.permission = permission

@@ -1,5 +1,6 @@
 <script>
 import axios from "axios";
+import { http_request } from "./helpers.js";
 
 export default {
 	data() {
@@ -14,19 +15,15 @@ export default {
 
 			data.append("board_name", this.board_name);
 
-			const jwt = localStorage.getItem("jwt");
-
-			axios
-				.request({
-					method: "post",
-					url: import.meta.env.VITE_API_URL + "board/create",
-					headers: { Authorization: "Bearer " + jwt },
-					data: data,
-				})
-				.post(import.meta.env.VITE_API_URL + "board/create", data)
-				.then((response) => {
-					console.log(response);
-				});
+			http_request(
+				"post",
+				"board/create",
+				(data) => {
+					console.log(data);
+				},
+				this,
+				data
+			);
 		},
 	},
 };

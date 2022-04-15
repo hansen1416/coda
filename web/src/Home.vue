@@ -1,26 +1,29 @@
 <script>
 import axios from "axios";
+import { http_request } from "./helpers.js";
 
 export default {
 	data() {
 		return {
 			user: {},
 			username: "",
+			error: "",
 		};
 	},
 	created() {
 		const jwt = localStorage.getItem("jwt");
 
-		axios
-			.request({
-				method: "get",
-				url: import.meta.env.VITE_API_URL + "auth/me",
-				headers: { Authorization: "Bearer " + jwt },
-			})
-			.then((response) => {
-				this.user = JSON.parse(response.data.current_user);
-				this.username = this.user.username;
-			});
+		if (jwt) {
+			http_request(
+				"get",
+				"auth/me",
+				(data) => {
+					this.user = JSON.parse(data.current_user);
+					this.username = this.user.username;
+				},
+				this
+			);
+		}
 	},
 };
 </script>

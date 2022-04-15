@@ -41,10 +41,7 @@ class User(db.Model):
 
     @classmethod
     def get(cls, user_id):
-        """
-        :rtype: object
-        :type user_id: int
-        """
+
         try:
             return User.query.filter_by(id=user_id).one()
         except NoResultFound:

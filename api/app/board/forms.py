@@ -6,7 +6,5 @@ from wtforms import StringField
 from wtforms.validators import DataRequired
 
 
-class RegisterForm(FlaskForm):
-    username = StringField('Username', [DataRequired()])
-    email = StringField('Email Address', [DataRequired()])
-    password = StringField('Password', [DataRequired()])
+class BoardForm(FlaskForm):
+    board_name = StringField('board_name', [DataRequired()])

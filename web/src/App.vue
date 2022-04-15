@@ -1,34 +1,10 @@
 <script>
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import Home from "./Home.vue";
-import Login from "./Login.vue";
-import Register from "./Register.vue";
-import CreateBoard from "./CreateBoard.vue";
-import NotFound from "./NotFound.vue";
-
-const routes = {
-	"/": Home,
-	"/register": Register,
-	"/login": Login,
-	"/create/board": CreateBoard,
-};
 
 export default {
 	data() {
-		return {
-			currentPath: window.location.hash,
-		};
-	},
-	computed: {
-		currentView() {
-			return routes[this.currentPath.slice(1) || "/"] || NotFound;
-		},
-	},
-	mounted() {
-		window.addEventListener("hashchange", () => {
-			this.currentPath = window.location.hash;
-		});
+		return {};
 	},
 };
 </script>
@@ -38,21 +14,24 @@ export default {
 		<va-navbar color="dark" class="nav">
 			<template #center>
 				<va-navbar-item>
-					<a href="#/">Home</a>
+					<router-link to="/">Home</router-link>
 				</va-navbar-item>
 				<va-navbar-item>
-					<a href="#/register">Register</a>
+					<router-link to="/register">Register</router-link>
 				</va-navbar-item>
 				<va-navbar-item>
-					<a href="#/login">Login</a>
+					<router-link to="/login">Login</router-link>
 				</va-navbar-item>
 				<va-navbar-item>
-					<a href="#/create/board">Create Board</a>
+					<router-link to="/create/board">Create Board</router-link>
+				</va-navbar-item>
+				<va-navbar-item>
+					<router-link to="/create/board">Create Board</router-link>
 				</va-navbar-item>
 			</template>
 		</va-navbar>
 
-		<component :is="currentView" />
+		<router-view></router-view>
 	</div>
 </template>
 

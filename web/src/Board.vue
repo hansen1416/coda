@@ -12,7 +12,8 @@ export default {
 			error: "",
 			name: "",
 			permission: "",
-			can_edit: false,
+			is_admin: false,
+			invite_username: "",
 		};
 	},
 	created() {
@@ -23,7 +24,7 @@ export default {
 				this.name = data.board_name;
 				this.permission = data.board_permission;
 
-				this.can_edit = this.permission & (1 << permission_admin);
+				this.is_admin = this.permission & (1 << permission_admin);
 			},
 			this
 		);
@@ -45,6 +46,7 @@ export default {
 				data
 			);
 		},
+		invite_mod() {},
 	},
 };
 </script>
@@ -59,9 +61,15 @@ export default {
 			{{ error }}
 		</va-alert>
 		<div>{{ name }}</div>
-		<div v-if="can_edit" style="width: 400px">
-			<va-input label="Board Name:" v-model="name" />
-			<va-button @click="edit_board">Edit</va-button>
+		<div v-if="is_admin" style="width: 400px">
+			<div>
+				<va-input label="Board Name:" v-model="name" />
+				<va-button @click="edit_board">Edit</va-button>
+			</div>
+			<div>
+				<va-input label="Invite Moderator:" v-model="invite_username" />
+				<va-button @click="invite_mod">Invite</va-button>
+			</div>
 		</div>
 	</div>
 </template>

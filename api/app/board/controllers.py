@@ -84,9 +84,11 @@ def get_one(board_id):
 
         user = json.loads(user)
 
-        permission = BoardPermission.query.filter_by(
+        board_permission = BoardPermission.query.filter_by(
             board_id=board_id, user_id=user['id']).first()
 
-        return jsonify(board_name=board.name, board_permission=permission.permission)
+        permission = board_permission.permission if board_permission else 0
+
+        return jsonify(board_name=board.name, board_permission=permission)
 
     return jsonify(board_name=board.name)

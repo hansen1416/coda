@@ -13,7 +13,7 @@ from app.constants import *
 mod_thread = Blueprint('thread', __name__, url_prefix='/thread')
 
 
-@mod_thread.route('/read/<thread_id>', methods=['POST'])
+@mod_thread.route('/read/<thread_id>', methods=['GET'])
 @jwt_required(optional=True)
 def read(thread_id):
 
@@ -78,9 +78,11 @@ def add():
 
             db.session.add(thread_permission)
 
+            thread_id = thread.id
+
             db.session.commit()
 
-            return jsonify(thread_id=thread.id)
+            return jsonify(thread_id=thread_id)
 
         except:
             db.session.rollback()

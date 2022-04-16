@@ -10,6 +10,7 @@ import Login from "./Login.vue";
 import Register from "./Register.vue";
 import CreateBoard from "./CreateBoard.vue";
 import Board from "./Board.vue";
+import Thread from "./Thread.vue";
 
 const routes = [
 	{ path: "/", component: Home },
@@ -18,6 +19,7 @@ const routes = [
 	{ path: "/create/board", component: CreateBoard },
 	{ path: "/board/:id", component: Board },
 	{ path: "/:pathMatch(.*)", component: NotFound },
+	{ path: "/thread/:id", component: Thread },
 ];
 
 // 3. Create the router instance and pass the `routes` option

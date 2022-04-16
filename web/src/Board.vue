@@ -16,6 +16,8 @@ export default {
 			invite_username: "",
 			invite_id: 0,
 			user: {},
+			thread_title: "",
+			thread_content: "",
 		};
 	},
 	created() {
@@ -93,6 +95,23 @@ export default {
 				data
 			);
 		},
+		new_thread() {
+			const data = new FormData();
+
+			data.append("board_id", this.$route.params.id);
+			data.append("title", this.thread_title);
+			data.append("content", this.thread_content);
+
+			http_request(
+				"post",
+				"thread/add",
+				(data) => {
+					this.$router.push({ path: "/thread/" + data.thread_id });
+				},
+				this,
+				data
+			);
+		},
 	},
 };
 </script>
@@ -107,7 +126,17 @@ export default {
 			{{ error }}
 		</va-alert>
 		<div>{{ name }}</div>
-		<div v-if="user.id" class="form"></div>
+		<div v-if="user.id" class="form">
+			<va-input label="Thread title:" v-model="thread_title" />
+			<va-input
+				label="Thread content"
+				v-model="thread_content"
+				type="textarea"
+				:min-rows="3"
+				:max-rows="5"
+			/>
+			<va-button @click="new_thread">New Thread</va-button>
+		</div>
 
 		<div v-if="is_admin" class="form">
 			<div>

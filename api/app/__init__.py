@@ -33,12 +33,15 @@ def register_module():
     from app.auth.controllers import mod_auth
     from app.board.controllers import mod_board
     from app.invite.controllers import mod_invite
+    from app.thread.controllers import mod_thread
+    from app.post.controllers import mod_post
 
     # Register blueprint(s)
     app.register_blueprint(mod_auth)
     app.register_blueprint(mod_board)
     app.register_blueprint(mod_invite)
-    # ..
+    app.register_blueprint(mod_thread)
+    app.register_blueprint(mod_post)
 
     # Build the database:
     # This will create the database file using SQLAlchemy

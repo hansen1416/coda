@@ -10,9 +10,11 @@ export default {
 	data() {
 		return {
 			error: "",
-			title: "",
+			thread: {},
 			permission: "",
 			user: {},
+			posts: [],
+			post_content: "",
 		};
 	},
 	created() {
@@ -29,23 +31,43 @@ export default {
 			"get",
 			"thread/read/" + this.$route.params.id,
 			(data) => {
-				console.log(data);
+				this.thread = data.thread;
+				this.permission = data.permission;
+				this.posts = data.posts;
 			},
 			this
 		);
 	},
 	methods: {
-		edit_board() {
+		delete_post(board_id, thead_id, post_id) {
 			const data = new FormData();
 
-			data.append("board_id", this.$route.params.id);
-			data.append("board_name", this.name);
+			data.append("board_id", board_id);
+			data.append("thread_id", thead_id);
+			data.append("post_id", post_id);
 
 			http_request(
 				"post",
-				"board/edit",
+				"post/delete",
 				(data) => {
-					this.name = data.board_name;
+					console.log(data);
+				},
+				this,
+				data
+			);
+		},
+		new_post() {
+			const data = new FormData();
+
+			data.append("board_id", this.thread.board_id);
+			data.append("thread_id", this.thread.id);
+			data.append("content", this.post_content);
+
+			http_request(
+				"post",
+				"post/add",
+				(data) => {
+					console.log(data);
 				},
 				this,
 				data
@@ -55,7 +77,7 @@ export default {
 };
 </script>
 <template>
-	<div>
+	<div class="form">
 		<va-alert
 			v-if="error"
 			color="danger"
@@ -64,6 +86,39 @@ export default {
 		>
 			{{ error }}
 		</va-alert>
-		<div>{{ title }}</div>
+		<va-list>
+			<va-list-label>
+				{{ thread.title }}
+			</va-list-label>
+			<va-list-item v-for="(post, index) in posts" :key="index">
+				<va-list-item-section caption>
+					<div>
+						<div>{{ post.content }}</div>
+						<div v-if="this.permission">
+							<va-button
+								@click="
+									delete_post(
+										post.board_id,
+										post.thead_id,
+										post.id
+									)
+								"
+								>Delete</va-button
+							>
+						</div>
+					</div>
+				</va-list-item-section>
+			</va-list-item>
+		</va-list>
+		<div v-if="user.id" class="form">
+			<va-input
+				label="Post content"
+				v-model="post_content"
+				type="textarea"
+				:min-rows="3"
+				:max-rows="5"
+			/>
+			<va-button @click="new_post">New Post</va-button>
+		</div>
 	</div>
 </template>

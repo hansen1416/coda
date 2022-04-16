@@ -51,7 +51,7 @@ class ThreadPermission(db.Model):
     def has_permission(board_id, thread_id, user_id):
 
         board_permission = BoardPermission.query.filter_by(
-            board_id=board_id, user_id=user_id).one()
+            board_id=board_id, user_id=user_id).first()
 
         if board_permission:
             if board_permission.permission & (1 << PERMISSION_ADMIN):
@@ -61,7 +61,7 @@ class ThreadPermission(db.Model):
                 return True
 
         thread_permission = ThreadPermission.query.filter_by(
-            thread_id=thread_id, user_id=user_id).one()
+            thread_id=thread_id, user_id=user_id).first()
 
         if not thread_permission:
             return False

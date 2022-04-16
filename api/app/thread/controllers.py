@@ -13,6 +13,15 @@ from app.constants import *
 mod_thread = Blueprint('thread', __name__, url_prefix='/thread')
 
 
+def row_dict(row):
+    return {column: str(getattr(row, column))
+            for column in row.__table__.c.keys()}
+
+
+def rows_dict(rows):
+    return [row_dict(row) for row in rows]
+
+
 @mod_thread.route('/read/<thread_id>', methods=['GET'])
 @jwt_required(optional=True)
 def read(thread_id):
@@ -21,7 +30,7 @@ def read(thread_id):
 
     board_id = thread.board_id
 
-    posts = Post.query.filter_by(id=thread_id).all()
+    posts = Post.query.filter_by(thread_id=thread_id).all()
 
     permission = 0
 
@@ -34,7 +43,7 @@ def read(thread_id):
         permission = ThreadPermission.has_permission(
             board_id, thread_id, user_id)
 
-    return jsonify(thread=thread.title, posts=posts, permission=int(permission))
+    return jsonify(thread=row_dict(thread), posts=rows_dict(posts), permission=int(permission))
 
 
 @mod_thread.route('/add', methods=['POST'])

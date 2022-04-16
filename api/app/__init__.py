@@ -30,12 +30,14 @@ def not_found(error):
 # Import a module / component using its blueprint handler variable (mod_auth)
 
 def register_module():
-    from app.auth.controllers import mod_auth as auth_module
-    from app.board.controllers import mod_board as board_module
+    from app.auth.controllers import mod_auth
+    from app.board.controllers import mod_board
+    from app.invite.controllers import mod_invite
 
     # Register blueprint(s)
-    app.register_blueprint(auth_module)
-    app.register_blueprint(board_module)
+    app.register_blueprint(mod_auth)
+    app.register_blueprint(mod_board)
+    app.register_blueprint(mod_invite)
     # ..
 
     # Build the database:

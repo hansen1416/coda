@@ -1,5 +1,5 @@
 <script>
-import axios from "axios";
+import { http_request } from "./helpers.js";
 
 export default {
 	data() {
@@ -18,32 +18,17 @@ export default {
 			data.append("email", this.useremail);
 			data.append("password", this.password);
 
-			axios
-				.post(import.meta.env.VITE_API_URL + "auth/register", data)
-				.then((response) => {
-					if (response.data) {
-						if (response.data.error) {
-							this.error = response.data.error;
-
-							setTimeout(() => {
-								this.error = "";
-							}, 5000);
-						} else if (response.data.access_token) {
-							localStorage.setItem(
-								"jwt",
-								response.data.access_token
-							);
-
-							window.location = "#/";
-						}
-					} else {
-						this.error = "wrong response format";
-
-						setTimeout(() => {
-							this.error = "";
-						}, 5000);
-					}
-				});
+			http_request(
+				"post",
+				"auth/register",
+				(data) => {
+					localStorage.setItem("jwt", data.access_token);
+					localStorage.setItem("jwt_refresh", data.refresh_token);
+					window.location = "#/";
+				},
+				this,
+				data
+			);
 		},
 	},
 };

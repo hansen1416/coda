@@ -7,6 +7,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app import db
 from app.board.forms import BoardForm
 from app.board.models import Board, BoardPermission
+from app.invite.models import Invite
 from app.constants import *
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
@@ -21,30 +22,30 @@ def create():
 
     form = BoardForm(request.form, meta={'csrf': False})
 
-    db.session.begin()
+    with db.session.begin():
 
-    try:
+        try:
 
-        # db.session.add(transaction)
-        board = Board(name=form.board_name.data)
-        db.session.add(board)
+            # db.session.add(transaction)
+            board = Board(name=form.board_name.data)
+            db.session.add(board)
 
-        db.session.flush()
+            db.session.flush()
 
-        board_permission = BoardPermission(
-            board_id=board.id, user_id=current_user['id'], permission=(1 << PERMISSION_ADMIN) + (1 << PERMISSION_OWNER))
-        db.session.add(board_permission)
+            board_permission = BoardPermission(
+                board_id=board.id, user_id=current_user['id'], permission=(1 << PERMISSION_ADMIN) + (1 << PERMISSION_OWNER))
+            db.session.add(board_permission)
 
-        db.session.commit()
+            db.session.commit()
 
-        return jsonify(board_id=board.id)
+            return jsonify(board_id=board.id)
 
-    except:
-        db.session.rollback()
+        except:
+            db.session.rollback()
 
-        _, error_message, _ = sys.exc_info()
+            _, error_message, _ = sys.exc_info()
 
-        return jsonify(error=error_message)
+            return jsonify(error=error_message)
 
 
 @mod_board.route('/edit', methods=['POST'])
@@ -89,6 +90,11 @@ def get_one(board_id):
 
         permission = board_permission.permission if board_permission else 0
 
-        return jsonify(board_name=board.name, board_permission=permission)
+        invite = Invite.query.filter_by(
+            board_id=board_id, receiver_user_id=user['id'], status=INVITE_DEFAULT).first()
+
+        invite_id = invite.id if invite else 0
+
+        return jsonify(board_name=board.name, board_permission=permission, invite_id=invite_id)
 
     return jsonify(board_name=board.name)

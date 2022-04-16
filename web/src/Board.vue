@@ -28,7 +28,24 @@ export default {
 			this
 		);
 	},
-	methods: {},
+	methods: {
+		edit_board() {
+			const data = new FormData();
+
+			data.append("board_id", this.$route.params.id);
+			data.append("board_name", this.name);
+
+			http_request(
+				"post",
+				"board/edit",
+				(data) => {
+					this.name = data.board_name;
+				},
+				this,
+				data
+			);
+		},
+	},
 };
 </script>
 <template>
@@ -42,6 +59,9 @@ export default {
 			{{ error }}
 		</va-alert>
 		<div>{{ name }}</div>
-		<va-button v-if="can_edit">Edit</va-button>
+		<div v-if="can_edit" style="width: 400px">
+			<va-input label="Board Name:" v-model="name" />
+			<va-button @click="edit_board">Edit</va-button>
+		</div>
 	</div>
 </template>

@@ -22,7 +22,7 @@ export default {
 			"get",
 			"auth/me",
 			(data) => {
-				this.user = JSON.parse(data.current_user);
+				this.user = data.current_user;
 			},
 			this
 		);

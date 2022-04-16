@@ -5,7 +5,6 @@ export default {
 	data() {
 		return {
 			user: {},
-			username: "",
 			error: "",
 		};
 	},
@@ -20,8 +19,7 @@ export default {
 					localStorage.setItem("jwt", data.access_token);
 					localStorage.setItem("jwt_refresh", data.refresh_token);
 
-					this.user = JSON.parse(data.current_user);
-					this.username = this.user.username;
+					this.user = data.current_user;
 				},
 				this,
 				undefined,
@@ -34,7 +32,10 @@ export default {
 <template>
 	<div>
 		<h2>home</h2>
-		<p v-if="username">Welcome {{ username }}</p>
-		<p></p>
+		<div v-if="user.id">
+			<span>Welcome! </span>
+			<va-avatar :src="user.avartar" size="small" />
+			<span>&nbsp;{{ user.username }}</span>
+		</div>
 	</div>
 </template>

@@ -7,14 +7,10 @@ from flask_jwt_extended import create_access_token, create_refresh_token, \
 # Import password / encryption helper tools
 from werkzeug.security import check_password_hash
 
-# Import the database object from the main app module
 from app import db
-
-# Import module forms
 from app.auth.forms import RegisterForm
-
-# Import module models (i.e. User)
 from app.auth.models import User
+from app.gravartar import Gravatar
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 mod_auth = Blueprint('auth', __name__, url_prefix='/auth')
@@ -83,21 +79,38 @@ def login():
 
 
 @mod_auth.route('/refresh', methods=['GET'])
-@jwt_required(refresh=True)
+@jwt_required(refresh=True, optional=True)
 def refresh_me():
 
     current_user = get_jwt_identity()
 
-    access_token = create_access_token(identity=current_user)
-    refresh_token = create_refresh_token(identity=current_user)
+    if current_user:
 
-    return jsonify(current_user=current_user, access_token=access_token, refresh_token=refresh_token)
+        access_token = create_access_token(identity=current_user)
+        refresh_token = create_refresh_token(identity=current_user)
+
+        current_user = json.loads(current_user)
+        g = Gravatar(current_user['email'])
+
+        current_user['avartar'] = g.get_image()
+
+        return jsonify(current_user=current_user, access_token=access_token, refresh_token=refresh_token)
+
+    return jsonify(current_user="", access_token="", refresh_token="")
 
 
 @mod_auth.route('/me', methods=['GET'])
-@jwt_required()
+@jwt_required(optional=True)
 def me():
 
     current_user = get_jwt_identity()
 
-    return jsonify(current_user=current_user)
+    if current_user:
+        current_user = json.loads(current_user)
+        g = Gravatar(current_user['email'])
+
+        current_user['avartar'] = g.get_image()
+
+        return jsonify(current_user=current_user)
+
+    return jsonify(current_user={})

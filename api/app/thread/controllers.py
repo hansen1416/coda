@@ -22,6 +22,14 @@ def rows_dict(rows):
     return [row_dict(row) for row in rows]
 
 
+@mod_thread.route('/list/<board_id>', methods=['GET'])
+def list(board_id):
+
+    threads = Thread.query.filter_by(board_id=board_id).all()
+
+    return jsonify(threads=rows_dict(threads))
+
+
 @mod_thread.route('/read/<thread_id>', methods=['GET'])
 @jwt_required(optional=True)
 def read(thread_id):
@@ -111,10 +119,10 @@ def update():
     board_id = request.form.get('board_id')
     thread_id = request.form.get('thread_id')
 
-    if not ThreadPermission.has_permission(board_id, thread_id, user_id):
-        return jsonify(error="No permission")
-
     with db.session.begin():
+        if not ThreadPermission.has_permission(board_id, thread_id, user_id):
+            return jsonify(error="No permission")
+
         try:
             Thread.query.filter_by(id=thread_id).delete()
 

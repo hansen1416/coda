@@ -18,6 +18,7 @@ export default {
 			user: {},
 			thread_title: "",
 			thread_content: "",
+			threads: [],
 		};
 	},
 	created() {
@@ -40,6 +41,14 @@ export default {
 				this.is_admin = this.permission & (1 << permission_admin);
 
 				this.invite_id = data.invite_id;
+			},
+			this
+		);
+		http_request(
+			"get",
+			"thread/list/" + this.$route.params.id,
+			(data) => {
+				this.threads = data.threads;
 			},
 			this
 		);
@@ -112,6 +121,22 @@ export default {
 				data
 			);
 		},
+		delete_thread(board_id, thread_id) {
+			const data = new FormData();
+
+			data.append("board_id", board_id);
+			data.append("thread_id", thread_id);
+
+			http_request(
+				"post",
+				"thread/delete",
+				(data) => {
+					console.log(data);
+				},
+				this,
+				data
+			);
+		},
 	},
 };
 </script>
@@ -157,5 +182,24 @@ export default {
 				<va-button @click="update_invite(2)">Reject</va-button>
 			</div>
 		</div>
+		<va-list>
+			<va-list-item v-for="(thread, index) in threads" :key="index">
+				<va-list-item-section caption>
+					<div>
+						<router-link :to="'/thread/' + thread.id">{{
+							thread.title
+						}}</router-link>
+						<div v-if="this.permission">
+							<va-button
+								@click="
+									delete_thread(thread.board_id, thread.id)
+								"
+								>Delete</va-button
+							>
+						</div>
+					</div>
+				</va-list-item-section>
+			</va-list-item>
+		</va-list>
 	</div>
 </template>

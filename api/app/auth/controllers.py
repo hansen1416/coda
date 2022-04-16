@@ -82,9 +82,9 @@ def login():
     return jsonify(error="failed")
 
 
-@mod_auth.route('/me', methods=['GET'])
+@mod_auth.route('/refresh', methods=['GET'])
 @jwt_required(refresh=True)
-def get_me():
+def refresh_me():
 
     current_user = get_jwt_identity()
 
@@ -92,3 +92,12 @@ def get_me():
     refresh_token = create_refresh_token(identity=current_user)
 
     return jsonify(current_user=current_user, access_token=access_token, refresh_token=refresh_token)
+
+
+@mod_auth.route('/me', methods=['GET'])
+@jwt_required()
+def me():
+
+    current_user = get_jwt_identity()
+
+    return jsonify(current_user=current_user)

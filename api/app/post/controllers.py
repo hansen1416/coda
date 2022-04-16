@@ -63,7 +63,7 @@ def update():
 
 @mod_post.route('/delete', methods=['POST'])
 @jwt_required()
-def update():
+def delete():
 
     current_user = json.loads(get_jwt_identity())
 

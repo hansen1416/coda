@@ -15,9 +15,19 @@ export default {
 			is_admin: false,
 			invite_username: "",
 			invite_id: 0,
+			user: {},
 		};
 	},
 	created() {
+		http_request(
+			"get",
+			"auth/me",
+			(data) => {
+				this.user = JSON.parse(data.current_user);
+			},
+			this
+		);
+
 		http_request(
 			"get",
 			"board/front/" + this.$route.params.id,
@@ -97,7 +107,9 @@ export default {
 			{{ error }}
 		</va-alert>
 		<div>{{ name }}</div>
-		<div v-if="is_admin" style="width: 400px">
+		<div v-if="user.id" class="form"></div>
+
+		<div v-if="is_admin" class="form">
 			<div>
 				<va-input label="Board Name:" v-model="name" />
 				<va-button @click="edit_board">Edit</va-button>
@@ -107,7 +119,7 @@ export default {
 				<va-button @click="invite_mod">Invite</va-button>
 			</div>
 		</div>
-		<div v-if="invite_id" style="width: 400px">
+		<div v-if="invite_id" class="form">
 			<div>
 				<p>
 					You have a moderator invitation from admin {{ invite_id }}

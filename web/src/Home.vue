@@ -15,7 +15,7 @@ export default {
 		if (jwt_refresh) {
 			http_request(
 				"get",
-				"auth/me",
+				"auth/refresh",
 				(data) => {
 					localStorage.setItem("jwt", data.access_token);
 					localStorage.setItem("jwt_refresh", data.refresh_token);

@@ -16,7 +16,7 @@ class Post(db.Model):
 
     thread_id = db.Column(db.Integer,  nullable=False)
 
-    content = db.Column(db.String(128),  nullable=False)
+    content = db.Column(db.Text,  nullable=False)
 
     created_at = db.Column(db.DateTime,  default=db.func.current_timestamp())
 

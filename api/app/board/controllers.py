@@ -56,10 +56,7 @@ def edit():
 
     board_id = request.form.get('board_id')
 
-    permission = BoardPermission.query.filter_by(
-        board_id=board_id, user_id=current_user['id']).first()
-
-    if not (permission.permission & (1 << PERMISSION_ADMIN)):
+    if not BoardPermission.has_permission(board_id, current_user['id']):
         return jsonify(error="No permission")
 
     form = BoardForm(request.form, meta={'csrf': False})

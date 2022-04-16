@@ -2,9 +2,11 @@
 # We will define this inside /app/__init__.py in the next sections.
 from app import db
 from sqlalchemy.orm.exc import NoResultFound
-
+from app.constants import *
 
 # Define a User model
+
+
 class Board(db.Model):
 
     __tablename__ = 'board'
@@ -54,3 +56,13 @@ class BoardPermission(db.Model):
         self.board_id = board_id
         self.user_id = user_id
         self.permission = permission
+
+    def has_permission(board_id, user_id):
+
+        board_permission = BoardPermission.query.filter_by(
+            board_id=board_id, user_id=user_id).one()
+
+        if board_permission and board_permission.permission & (1 << PERMISSION_ADMIN):
+            return True
+
+        return False

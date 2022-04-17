@@ -13,7 +13,6 @@ services:
     command: npm run dev
   nginx:
     image: nginx:1.20-alpine
-    # build: ./services/nginx
     volumes:
       - type: bind
         source: ./nginx/conf.d
@@ -59,6 +58,7 @@ services:
 
   worker:
     build: ./celery
+    image: hansen1416/coda_worker
     command: celery --app celery_app.celery worker --loglevel=info
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0

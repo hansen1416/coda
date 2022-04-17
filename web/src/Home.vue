@@ -7,6 +7,7 @@ export default {
 			user: {},
 			board_list: [],
 			permission: 0,
+			edit_permission: {},
 			error: "",
 		};
 	},
@@ -61,6 +62,24 @@ export default {
 				data
 			);
 		},
+		user_permission() {
+			const data = new FormData();
+
+			data.append("user_id", this.edit_permission.user_id);
+			data.append("board_id", this.edit_permission.board_id);
+			data.append("thread_id", this.edit_permission.thread_id);
+			data.append("permission", this.edit_permission.permission);
+
+			http_request(
+				"post",
+				"auth/permission",
+				(data) => {
+					console.log(data);
+				},
+				this,
+				data
+			);
+		},
 	},
 };
 </script>
@@ -76,7 +95,7 @@ export default {
 			<va-list-item v-for="(board, index) in board_list" :key="index">
 				<va-list-item-section caption>
 					<div>
-						<router-link :to="'/board/front/' + board.id">{{
+						<router-link :to="'/board/' + board.id">{{
 							board.name
 						}}</router-link>
 						<div v-if="this.permission">
@@ -89,6 +108,18 @@ export default {
 				</va-list-item-section>
 			</va-list-item>
 		</va-list>
-		<va-button @click="group_board()">Sort</va-button>
+		<va-button v-if="this.permission" @click="group_board()"
+			>Sort</va-button
+		>
+		<div v-if="this.permission">
+			<va-input label="User id:" v-model="edit_permission.user_id" />
+			<va-input label="Board id:" v-model="edit_permission.board_id" />
+			<va-input label="Thread id:" v-model="edit_permission.thread_id" />
+			<va-input
+				label="Permission level:"
+				v-model="edit_permission.permission"
+			/>
+			<va-button @click="user_permission()">Save</va-button>
+		</div>
 	</div>
 </template>

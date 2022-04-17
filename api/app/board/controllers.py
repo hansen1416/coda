@@ -145,4 +145,4 @@ def board_sort():
 
     db.session.commit()
 
-    return jsonify()
+    return jsonify(status=1)

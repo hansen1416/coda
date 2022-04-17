@@ -10,7 +10,9 @@ from werkzeug.security import check_password_hash
 
 from app import db
 from app.auth.forms import RegisterForm
-from app.auth.models import User
+from app.auth.models import User, Superusers
+from app.board.models import BoardPermission
+from app.thread.models import ThreadPermission
 from app.gravartar import Gravatar
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
@@ -115,3 +117,50 @@ def me():
         return jsonify(current_user=current_user)
 
     return jsonify(current_user={})
+
+
+@mod_auth.route('/permission', methods=['POST'])
+@jwt_required()
+def user_permission():
+
+    user = json.loads(get_jwt_identity())
+
+    superuser = Superusers.query.filter_by(user_id=user['id']).first()
+
+    if not superuser:
+        return jsonify(error="No permission")
+
+    user_id = request.form.get('user_id')
+    board_id = request.form.get('board_id')
+    thread_id = request.form.get('thread_id')
+    permission = request.form.get('permission')
+    permission = (1 << int(permission))
+
+    if board_id:
+        board_permission = BoardPermission.query.filter_by(
+            board_id=board_id, user_id=user_id).first()
+
+        if board_permission:
+            board_permission.permission = permission
+        else:
+            board_permission = BoardPermission(
+                board_id=board_id, user_id=user_id, permission=permission)
+
+            db.session.add(board_permission)
+
+    elif thread_id:
+
+        thread_permission = ThreadPermission.query.filter_by(
+            board_id=board_id, thread_id=thread_id, user_id=user_id).first()
+
+        if thread_permission:
+            thread_permission.permission = permission
+        else:
+            thread_permission = ThreadPermission(
+                board_id=board_id, thread_id=thread_id, user_id=user_id)
+
+            db.session.add(thread_permission)
+
+    db.session.commit()
+
+    return jsonify(status=1)

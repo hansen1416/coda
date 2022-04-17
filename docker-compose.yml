@@ -58,21 +58,10 @@ services:
     image: redis:6-alpine
 
   worker:
-    build: .
-    command: celery --app project.server.tasks.celery worker --loglevel=info --logfile=project/logs/celery.log
+    build: ./celery
+    command: -A celery_app.celery worker --loglevel=info
     volumes:
-      - .:/usr/src/app
-    environment:
-      - FLASK_DEBUG=1
-      - APP_SETTINGS=project.server.config.DevelopmentConfig
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - ./celery:/app
     depends_on:
       - api
       - redis
-
-
-# networks:
-#   host:
-#     name: host
-#     external: true

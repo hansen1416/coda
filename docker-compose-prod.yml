@@ -1,0 +1,92 @@
+version: "3.9"  # optional since v1.27.0
+services:
+  web:
+    image: node:14-alpine
+    working_dir: /web
+    volumes:
+      - type: bind
+        source: ./web
+        target: /web
+    ports:
+      - "3000:3000"
+    # command: tail -f /dev/null
+    command: npm run dev
+  nginx:
+    image: nginx:1.20-alpine
+    volumes:
+      - type: bind
+        source: ./nginx/conf.d
+        target: /etc/nginx/conf.d
+    ports:
+      - 1337:80
+    depends_on:
+      - api
+  api:
+    build: ./api
+    image: hansen1416/coda_api
+    working_dir: /api
+    volumes:
+    - type: bind
+      source: ./api
+      target: /api
+    # ports:
+    #   - 5000:5000
+    expose:
+      - 5000
+    env_file:
+      - ./.env.dev
+    # command: python run.py run -h 0.0.0.0
+    command: gunicorn --bind 0.0.0.0:5000 run:app
+    depends_on:
+      - db
+  db:
+    image: postgres:13-alpine
+    # volumes:
+    #   - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=hlz
+      - POSTGRES_PASSWORD=12345678
+      - POSTGRES_DB=coda
+    working_dir: /mnt
+    volumes:
+    - type: bind
+      source: ./postgressql
+      target: /mnt
+
+  redis:
+    image: redis:6-alpine
+
+  worker:
+    build: ./celery
+    image: hansen1416/coda_worker
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    expose:
+      - 5000
+    working_dir: /app
+    volumes:
+      - type: bind
+        source: ./celery
+        target: /app
+    depends_on:
+      - api
+      - redis
+    command: python3 /app/app.py
+  celery:
+    build: ./celery
+    image: hansen1416/coda_worker
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    expose:
+      - 5000
+    working_dir: /app
+    volumes:
+      - type: bind
+        source: ./celery
+        target: /app
+    depends_on:
+      - api
+      - redis
+    command: celery --app app.celery worker --loglevel=info

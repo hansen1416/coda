@@ -36,9 +36,11 @@ def create():
                 board_id=board.id, user_id=current_user['id'], permission=(1 << PERMISSION_ADMIN) + (1 << PERMISSION_OWNER))
             db.session.add(board_permission)
 
+            board_id = board.id
+
             db.session.commit()
 
-            return jsonify(board_id=board.id)
+            return jsonify(board_id=board_id)
 
         except:
             db.session.rollback()

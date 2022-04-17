@@ -5,6 +5,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from app import db
+from app.auth.models import Superusers
 from app.board.forms import BoardForm
 from app.board.models import Board, BoardPermission
 from app.invite.models import Invite
@@ -103,12 +104,45 @@ def get_one(board_id):
 @jwt_required(optional=True)
 def board_list():
 
-    board_list = Board.query.limit(5).all()
+    board_list = Board.query.order_by(Board.group_id.asc()).limit(5).all()
 
     user = get_jwt_identity()
+
+    permission = 0
 
     if (user):
 
         user = json.loads(user)
 
-    return jsonify(board_list=board_list)
+        superuser = Superusers.query.filter_by(user_id=user['id']).first()
+
+        if superuser:
+            permission = 1
+
+    return jsonify(board_list=rows_dict(board_list), permission=permission)
+
+
+@mod_board.route('/sort', methods=['POST'])
+@jwt_required()
+def board_sort():
+
+    user = json.loads(get_jwt_identity())
+
+    superuser = Superusers.query.filter_by(user_id=user['id']).first()
+
+    if not superuser:
+        return jsonify(error="No permission")
+
+    sorted_group = json.loads(request.form.get('sorted_group'))
+
+    group_id = [x['id'] for x in sorted_group]
+    id_group_id = {int(x['id']): x['group_id'] for x in sorted_group}
+
+    boards = Board.query.filter(Board.id.in_(group_id)).all()
+
+    for b in boards:
+        b.group_id = id_group_id[b.id]
+
+    db.session.commit()
+
+    return jsonify()

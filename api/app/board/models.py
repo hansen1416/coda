@@ -1,5 +1,6 @@
 # Import the database object (db) from the main application module
 # We will define this inside /app/__init__.py in the next sections.
+from email.policy import default
 from app import db
 from sqlalchemy.orm.exc import NoResultFound
 from app.constants import *
@@ -13,7 +14,9 @@ class Board(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # Board Name
-    name = db.Column(db.String(128),  nullable=False)
+    name = db.Column(db.String(128), nullable=False)
+
+    group_id = db.Column(db.Integer, nullable=False, default=0)
 
     created_at = db.Column(db.DateTime,  default=db.func.current_timestamp())
 

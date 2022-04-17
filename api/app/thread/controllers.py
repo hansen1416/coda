@@ -14,15 +14,6 @@ from app.constants import *
 mod_thread = Blueprint('thread', __name__, url_prefix='/thread')
 
 
-def row_dict(row):
-    return {column: str(getattr(row, column))
-            for column in row.__table__.c.keys()}
-
-
-def rows_dict(rows):
-    return [row_dict(row) for row in rows]
-
-
 @mod_thread.route('/list/<board_id>', methods=['GET'])
 def list(board_id):
 

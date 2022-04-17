@@ -1,5 +1,4 @@
 import json
-import urllib.request
 
 # Import flask dependencies
 from flask import Blueprint, request, jsonify
@@ -85,12 +84,6 @@ def login():
 def refresh_me():
 
     current_user = get_jwt_identity()
-
-    req = urllib.request.Request("http://worker:5000", data={})
-
-    resp = urllib.request.urlopen(req)
-
-    print(resp)
 
     if current_user:
 

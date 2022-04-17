@@ -1,5 +1,6 @@
 import json
 import sys
+import urllib.request
 
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -98,6 +99,13 @@ def add():
             thread_id = thread.id
 
             db.session.commit()
+
+            req = urllib.request.Request("http://worker:5000", data={})
+
+            with urllib.request.urlopen(req) as response:
+                body = response.read(8192)
+                # do something heavy
+                print(body)
 
             return jsonify(thread_id=thread_id)
 

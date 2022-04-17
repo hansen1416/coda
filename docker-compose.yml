@@ -59,10 +59,6 @@ services:
   worker:
     build: ./celery
     image: hansen1416/coda_worker
-    command:
-    - |
-      celery worker -A app.celery --loglevel=info
-      python app.py
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
@@ -76,3 +72,5 @@ services:
     depends_on:
       - api
       - redis
+    command: >
+      celery worker -A app.celery --loglevel=info && python3 app.py

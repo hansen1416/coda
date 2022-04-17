@@ -18,7 +18,7 @@ celery.conf.update(app.config)
 
 
 @celery.task
-def send_async_email():
+def some_task():
     time.sleep(3)
     return True
 
@@ -46,7 +46,8 @@ def long_task(self):
 
 @app.route('/', methods=['POST'])
 def index():
-    return jsonify(data=1)
+    task = some_task.apply_async()
+    return jsonify(task_id=task.id)
 
 
 @app.route('/longtask', methods=['POST'])
@@ -87,4 +88,4 @@ def taskstatus(task_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

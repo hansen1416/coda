@@ -19,7 +19,7 @@ celery.conf.update(app.config)
 
 @celery.task
 def some_task():
-    time.sleep(3)
+    time.sleep(10)
     return True
 
 

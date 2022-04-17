@@ -97,3 +97,18 @@ def get_one(board_id):
         return jsonify(board_name=board.name, board_permission=permission, invite_id=invite_id)
 
     return jsonify(board_name=board.name)
+
+
+@mod_board.route('/list', methods=['GET'])
+@jwt_required(optional=True)
+def board_list():
+
+    board_list = Board.query.limit(5).all()
+
+    user = get_jwt_identity()
+
+    if (user):
+
+        user = json.loads(user)
+
+    return jsonify(board_list=board_list)

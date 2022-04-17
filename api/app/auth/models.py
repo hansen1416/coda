@@ -1,6 +1,7 @@
 # Import the database object (db) from the main application module
 # We will define this inside /app/__init__.py in the next sections.
 from app import db
+from sqlalchemy import event, DDL
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -46,3 +47,32 @@ class User(db.Model):
             return User.query.filter_by(id=user_id).one()
         except NoResultFound:
             return None
+
+
+class Superusers(db.Model):
+
+    __tablename__ = 'superusers'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    user_id = db.Column(db.Integer, nullable=False)
+
+    # New instance instantiation procedure
+    def __init__(self, user_id):
+        self.user_id = user_id
+
+
+# def after_superusers_create(target, connection, **kw):
+#     connection.execute(text(
+#         "ALTER TABLE %s SET name=foo_%s" % (target.name, target.name)
+#     ))
+
+
+event.listen(Superusers.__table__, "after_create", DDL(
+    "INSERT INTO %(table)s (user_id) VALUES (1)"),)
+
+
+# @event.listens_for(Superusers.__table__, 'after_create')
+# def default_admin(*args, **kwargs):
+#     db.session.add(Superusers(user_id=1))
+#     db.session.commit()

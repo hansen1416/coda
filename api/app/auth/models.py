@@ -57,6 +57,8 @@ class Superusers(db.Model):
 
     user_id = db.Column(db.Integer, nullable=False)
 
+    assigner_id =
+
     # New instance instantiation procedure
     def __init__(self, user_id):
         self.user_id = user_id

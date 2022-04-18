@@ -57,9 +57,9 @@ def register():
 
         return jsonify(access_token=access_token, refresh_token=refresh_token)
 
-    for fieldName, errorMessages in form.errors.items():
-        for err in errorMessages:
-            print(err)
+    # for fieldName, errorMessages in form.errors.items():
+    #     for err in errorMessages:
+    #         print(err)
 
     return jsonify(error=" ".join(form.username.errors) + " ".join(form.email.errors))
 

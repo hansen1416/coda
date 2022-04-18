@@ -20,6 +20,8 @@ class Post(db.Model):
 
     created_at = db.Column(db.DateTime,  default=db.func.current_timestamp())
 
+    # updated_at = db.Column(db.DateTime,  default=db.func.current_timestamp())
+
     # New instance instantiation procedure
     def __init__(self, board_id, user_id, thread_id, content):
         self.board_id = board_id

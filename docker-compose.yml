@@ -23,7 +23,7 @@ services:
       - api
   api:
     build: ./api
-    image: hansen1416/coda_api_test
+    image: hansen1416/coda_api
     working_dir: /api
     volumes:
     - type: bind

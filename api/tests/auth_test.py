@@ -1,23 +1,31 @@
+import json
 import unittest
 
-from app import app, register_module
-from app.auth.models import User
+from app import app
 
 
 class TestCase(unittest.TestCase):
 
     def setUp(self):
-        self.client = app.test_client()
+        self.app = app
 
-        # register_module()
+        self.app.config['TESTING'] = True
 
     def test_login(self):
 
         data = {"email": "a@qq.com", "password": 123}
 
-        response = self.client.post(data, "/auth/login")
+        with self.app.test_client() as client:
 
-        print(response)
+            response = client.post(
+                "/auth/login", data=data, headers={"Accept": "application/json, text/plain, */*"})
+
+            assert response.status == "200 OK"
+
+            body = json.loads(response.get_data(as_text=True))
+
+            assert "access_token" in body
+            assert "refresh_token" in body
 
 
 if __name__ == "__main__":
